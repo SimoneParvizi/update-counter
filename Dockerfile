@@ -26,7 +26,7 @@ COPY run.sh /run.sh
 RUN chmod +x /run.sh
 
 # Set up cron job
-RUN echo "55 14 * * * /bin/bash /run.sh" > /etc/cron.d/bot-cron && \
+RUN echo "2 15 * * * /bin/bash /run.sh" > /etc/cron.d/bot-cron && \
     chmod 0644 /etc/cron.d/bot-cron && \
     crontab /etc/cron.d/bot-cron
 
