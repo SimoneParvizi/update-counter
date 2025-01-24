@@ -8,8 +8,8 @@ RUN apt-get update && apt-get install -y git cron procps openssh-client
 ARG SSH_PRIVATE_KEY
 ARG SSH_CONFIG
 RUN mkdir -p /root/.ssh && \
-    printf "$SSH_PRIVATE_KEY" > /root/.ssh/id_ed25519_simoneparvizi && \
-    printf "$SSH_CONFIG" > /root/.ssh/config && \
+    echo "$SSH_PRIVATE_KEY" > /root/.ssh/id_ed25519_simoneparvizi && \
+    echo "$SSH_CONFIG" > /root/.ssh/config && \
     chmod 600 /root/.ssh/id_ed25519_simoneparvizi /root/.ssh/config && \
     ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
 
