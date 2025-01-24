@@ -4,18 +4,20 @@ FROM python:3.9-slim
 # Install dependencies
 RUN apt-get update && apt-get install -y git cron procps openssh-client
 
-# Set up SSH for GitHub
-# Copy your SSH private key into the container (use build secrets for secure handling)
+# Add SSH private key and SSH configuration
 ARG SSH_PRIVATE_KEY
+ARG SSH_CONFIG
 RUN mkdir -p /root/.ssh && \
-    echo "$SSH_PRIVATE_KEY" > /root/.ssh/id_rsa && \
-    chmod 600 /root/.ssh/id_rsa && \
+    printf "$SSH_PRIVATE_KEY" > /root/.ssh/id_ed25519_simoneparvizi && \
+    printf "$SSH_CONFIG" > /root/.ssh/config && \
+    chmod 600 /root/.ssh/id_ed25519_simoneparvizi /root/.ssh/config && \
     ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
 
-# Clone the remote repository
-RUN git clone git@github.com-simone:SimoneParvizi/update-counter.git /repo
 
-# Copy your scripts and files into the container
+# Clone the repository using the custom alias
+RUN GIT_SSH_COMMAND="ssh -F /root/.ssh/config" git clone git@github.com-simone:SimoneParvizi/update-counter.git /repo
+
+# Copy your scripts and files
 COPY counter.py /repo/
 COPY counter.txt /repo/
 COPY run.sh /run.sh
@@ -23,12 +25,8 @@ COPY run.sh /run.sh
 # Set permissions for the script
 RUN chmod +x /run.sh
 
-# Set up Git configuration
-RUN git config --global user.name "Simone Parvizi" && \
-    git config --global user.email "parvizi.simone@gmail.com"
-
 # Set up cron job
-RUN echo "35 12 * * * /bin/bash /run.sh" > /etc/cron.d/bot-cron && \
+RUN echo "55 14 * * * /bin/bash /run.sh" > /etc/cron.d/bot-cron && \
     chmod 0644 /etc/cron.d/bot-cron && \
     crontab /etc/cron.d/bot-cron
 
