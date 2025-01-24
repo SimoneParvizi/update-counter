@@ -13,7 +13,7 @@ RUN mkdir -p /root/.ssh && \
     ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
 
 # Clone the remote repository
-RUN git clone git@github.com:SimoneParvizi/update-counter.git /repo
+RUN git clone git@github.com-simone:SimoneParvizi/update-counter.git /repo
 
 # Copy your scripts and files into the container
 COPY counter.py /repo/
@@ -28,7 +28,7 @@ RUN git config --global user.name "Simone Parvizi" && \
     git config --global user.email "parvizi.simone@gmail.com"
 
 # Set up cron job
-RUN echo "31 12 * * * /bin/bash /run.sh" > /etc/cron.d/bot-cron && \
+RUN echo "35 12 * * * /bin/bash /run.sh" > /etc/cron.d/bot-cron && \
     chmod 0644 /etc/cron.d/bot-cron && \
     crontab /etc/cron.d/bot-cron
 
