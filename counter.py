@@ -3,18 +3,18 @@ import random
 from datetime import datetime, timedelta
 import holidays
 
-DRY_RUN = True  # Change to False to stop testing
+DRY_RUN = False  # Change to False to stop testing
 
 # Dutch holidays
 dutch_holidays = holidays.Netherlands()
 
 # File to update
 counter_file = "counter.txt"
-# today = datetime.now()
+today = datetime.now()
 
 # Specific dates for testing purposes
 # today = datetime(2025, 1, 25)  # Example: A Saturday
-today = datetime(2025, 1, 28)  # Example: A weekday
+# today = datetime(2025, 1, 28)  # Example: A weekday
 # today = datetime(2025, 12, 25)  # Example: A holiday
 
 weekday = today.weekday()  # Monday=0, Sunday=6
