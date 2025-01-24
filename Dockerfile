@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y git cron procps openssh-client
 # Add SSH private key and SSH configuration
 ARG SSH_PRIVATE_KEY
 ARG SSH_CONFIG
+#TODO: remove these echo since they print your ssh
 RUN mkdir -p /root/.ssh && \
     echo "$SSH_PRIVATE_KEY" > /root/.ssh/id_ed25519_simoneparvizi && \
     echo "$SSH_CONFIG" > /root/.ssh/config && \
@@ -26,7 +27,7 @@ COPY run.sh /run.sh
 RUN chmod +x /run.sh
 
 # Set up cron job
-RUN echo "2 15 * * * /bin/bash /run.sh" > /etc/cron.d/bot-cron && \
+RUN echo "6 15 * * * /bin/bash /run.sh" > /etc/cron.d/bot-cron && \
     chmod 0644 /etc/cron.d/bot-cron && \
     crontab /etc/cron.d/bot-cron
 
