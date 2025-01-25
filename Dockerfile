@@ -2,7 +2,27 @@
 FROM python:3.9-slim
 
 # Install dependencies
-RUN apt-get update && apt-get install -y git cron procps openssh-client
+RUN apt-get update && apt-get install -y \
+    git \
+    cron \
+    procps \
+    openssh-client \
+    curl && \
+    apt-get clean
+
+# Install Poetry
+RUN curl -sSL https://install.python-poetry.org | python3 - && \
+    ln -s /root/.local/bin/poetry /usr/local/bin/poetry
+
+# Set working directory
+WORKDIR /repo
+
+# Copy project files
+COPY pyproject.toml poetry.lock /repo/
+
+# Install project dependencies with Poetry
+RUN poetry config virtualenvs.create false && \
+    poetry install --no-root
 
 # Add SSH private key and SSH configuration
 ARG SSH_PRIVATE_KEY
@@ -27,7 +47,7 @@ COPY run.sh /run.sh
 RUN chmod +x /run.sh
 
 # Set up cron job
-RUN echo "58 8 * * * /bin/bash /run.sh" > /etc/cron.d/bot-cron && \
+RUN echo "02 9 * * * /bin/bash /run.sh" > /etc/cron.d/bot-cron && \
     chmod 0644 /etc/cron.d/bot-cron && \
     crontab /etc/cron.d/bot-cron
 
