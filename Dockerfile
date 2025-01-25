@@ -29,7 +29,7 @@ RUN GIT_SSH_COMMAND="ssh -F /root/.ssh/config" git clone git@github.com-simone:S
 
 # Copy requirements.txt and install dependencies
 COPY requirements.txt /repo/requirements.txt
-RUN pip install --no-cache-dir -r /repo/requirements.txt
+RUN pip install --no-cache-dir -r /repo/requirements.txt && pip list
 
 # Copy scripts
 COPY counter.py /repo/
