@@ -10,19 +10,8 @@ RUN apt-get update && apt-get install -y \
     curl && \
     apt-get clean
 
-# Install Poetry
-RUN curl -sSL https://install.python-poetry.org | python3 - && \
-    ln -s /root/.local/bin/poetry /usr/local/bin/poetry
-
 # Set working directory
 WORKDIR /repo
-
-# Copy project files
-COPY pyproject.toml poetry.lock /repo/
-
-# Install project dependencies with Poetry
-RUN poetry config virtualenvs.create false && \
-    poetry install --no-root
 
 # Add SSH private key and SSH configuration
 ARG SSH_PRIVATE_KEY
@@ -38,7 +27,11 @@ RUN mkdir -p /root/.ssh && \
 # Clone the repository using the custom alias
 RUN GIT_SSH_COMMAND="ssh -F /root/.ssh/config" git clone git@github.com-simone:SimoneParvizi/update-counter.git /repo
 
-# Copy your scripts and files
+# Copy requirements.txt and install dependencies
+COPY requirements.txt /repo/requirements.txt
+RUN pip install --no-cache-dir -r /repo/requirements.txt
+
+# Copy scripts
 COPY counter.py /repo/
 COPY counter.txt /repo/
 COPY run.sh /run.sh
@@ -47,7 +40,7 @@ COPY run.sh /run.sh
 RUN chmod +x /run.sh
 
 # Set up cron job
-RUN echo "02 9 * * * /bin/bash /run.sh" > /etc/cron.d/bot-cron && \
+RUN echo "09 9 * * * /bin/bash /run.sh" > /etc/cron.d/bot-cron && \
     chmod 0644 /etc/cron.d/bot-cron && \
     crontab /etc/cron.d/bot-cron
 
