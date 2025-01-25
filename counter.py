@@ -25,9 +25,9 @@ if today in dutch_holidays:
     print("No commits today (Dutch holiday).")
     exit()
 
-# if weekday == 5:  # Saturday
-#     print("No commits on Saturdays.")
-#     exit()
+if weekday == 5:  # Saturday
+    print("No commits on Saturdays.")
+    exit()
 
 if weekday == 6:  # Sunday
     # 30% chance to commit on Sundays
